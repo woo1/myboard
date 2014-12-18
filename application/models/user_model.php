@@ -6,6 +6,12 @@ class User_model extends CI_Model {
         parent::__construct();
     }
 
+    //이메일 중복 건수 확인
+    function getEmailDupCnt($option)
+    {
+        
+    }
+
     function add($option)
     {
         $this->db->set('email', $option['email']);

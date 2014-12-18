@@ -14,6 +14,7 @@
 			    	}
 			    </style>
 			    <link href="/static/lib/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">			    
+			    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
             </head>
             <body>
             	<?php
@@ -60,8 +61,8 @@
 				  </div>
 				</div>
 				<?php
-				//if($this->config->item('is_dev')) {
-				if(false){
+				if($this->config->item('is_dev')) {
+				//if(false){
 				?>
 				<div class="well span12">
 					개발환경을 수정 중입니다.

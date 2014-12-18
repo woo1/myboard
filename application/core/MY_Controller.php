@@ -1,4 +1,4 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class MY_Controller extends CI_Controller {
 
     function __construct()
@@ -16,5 +16,15 @@ class MY_Controller extends CI_Controller {
     }
     function _footer(){
         $this->load->view('footer');
+    }
+    //암호화(양방향)
+    function _encrypt($strVal){
+        $rtn_val = "";
+        if($strVal == "") {
+            return "";
+        }
+        $this->load->library('encrypt');
+        $rtn_val = $this->encrypt->encode($strVal);
+        return $rtn_val;
     }
 }

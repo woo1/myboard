@@ -18,23 +18,56 @@ class Auth extends MY_Controller {
 
     function register(){
         $this->_head();
+        $isValid = true; //값 정상 여부
+        $err_msg = ""; //오류 메시지
 
-        $this->load->library('form_validation');
+        $email = $this->input->post('email');
+        $nickname = $this->input->post('nickname');
+        $password = $this->input->post('password');
+        $re_password = $this->input->post('re_password');
+        $cert_no = $this->input->post('cert_no');
 
-        $this->form_validation->set_rules('email', '이메일 주소', 'required|valid_email|is_unique[user.email]');
-        $this->form_validation->set_rules('nickname', '닉네임', 'required|min_length[5]|max_length[20]');
-        $this->form_validation->set_rules('password', '비밀번호', 'required|min_length[6]|max_length[30]|matches[re_password]');
-        $this->form_validation->set_rules('re_password', '비밀번호 확인', 'required');
+        //입력값 체크
+        if(empty($email)){   //이메일
+            $this->load->view('register');
+            $isValid = false;
+        }
+        if(empty($nickname)){ //닉네임
+            $isValid = false;   
+            $err_msg += "닉네임은 필수 항목입니다;";
+        }
+        if(empty($password)){ //비밀번호
+            $isValid = false;
+            $err_msg += "비밀번호는 필수 항목입니다;";
+        }
+        if(empty($re_password)){ //비밀번호 확인
+            $isValid = false;
+            $err_msg += "비밀번호 확인은 필수 항목입니다;";
+        } else if($re_password != $password){
+            $err_msg += "비밀번호와 비밀번호 확인 값이 일치하지 않습니다;";
+        }
+        if(empty($cert_no)){   //인증번호
+            $isValid = false;
+            $err_msg += "인증번호는 필수 항목입니다;";
+        }
 
-        if($this->form_validation->run() === false){
-            $this->load->view('register');    
-        } else {
+        if(!empty($email) && !$isValid){ //입력값 오류인 경우
+            echo $err_msg;
+        }
+
+        if($isValid){
+            echo "2";
+            //이메일 양방향 암호화
+            $user_email = $this->_encrypt($this->input->post('email'));
+            
+            //비밀번호 단방향 암호화
             if(!function_exists('password_hash')){
                 $this->load->helper('password');
             }
-            $hash = password_hash($this->input->post('password'), PASSWORD_BCRYPT);
 
-            $this->load->model('user_model');
+            //$hash = password_hash($this->input->post('password'), PASSWORD_BCRYPT);
+
+            /*$this->load->model('user_model');
             $this->user_model->add(array(
                 'email'=>$this->input->post('email'),
                 'password'=>$hash,
@@ -43,7 +76,7 @@ class Auth extends MY_Controller {
 
             $this->session->set_flashdata('message', '회원가입에 성공했습니다.');
             $this->load->helper('url');
-            redirect('/');
+            redirect('/');*/
         }
 
         
