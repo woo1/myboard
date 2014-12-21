@@ -38,14 +38,25 @@
 				      </a>
 				 
 				      <!-- Be sure to leave the brand out there if you want it shown -->
-				      <a class="brand" href="#">내시</a>
-				 
+				      <?php
+			        	if($this->session->userdata('is_login')){
+			          ?>
+			          <a class="brand" href="#">내시</a>
+			          <?php
+				       	} else {
+				      ?>
+				      <a class="brand" href="/">내시</a>
+				 	  <?php
+				       	}
+				      ?>
+
 				      <!-- Everything you want hidden at 940px or less, place within here -->
 				      <div class="nav-collapse collapse">
 				        <ul class="nav pull-right">
 				        	<?php
 				        	if($this->session->userdata('is_login')){
 				        	?>
+				        		<li><a href="#"><strong><?php echo $this->session->userdata('nk_name')?></strong>님</a></li>
 				        		<li><a href="/index.php/auth/logout">로그아웃</a></li>
 				        	<?php
 				        	} else {
