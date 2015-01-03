@@ -5,6 +5,10 @@ class Auth extends MY_Controller {
         parent::__construct();    
     }    
     function login(){
+        if($this->session->userdata('is_login')){
+            $this->load->helper('url');
+            redirect('/board/myboard');
+        }
     	$this->_head();
         $this->load->view('login');     
         $this->_footer();   
@@ -33,6 +37,7 @@ class Auth extends MY_Controller {
         }
         //이메일 중복 체크
         if($rslt_cd != "1111"){
+            $email = base64_encode($email);
             $ns_user = $this->user_model->getEmailDupCnt(array('email'=>$email));
             if(!empty($ns_user)){
                 $ns_user_email = $ns_user->EMAIL;
@@ -95,6 +100,17 @@ class Auth extends MY_Controller {
         } else if(!preg_match($EmlExp, $email)){
             $rslt_cd = "1111"; 
             $err_msg .= "이메일 형식이 맞지 않습니다;";
+        }
+
+        $email2    = base64_encode($email);
+        //이메일 중복 체크
+        $ns_user = $this->user_model->getEmailDupCnt(array('email'=>$email2));
+        if(!empty($ns_user)){
+            $ns_user_email = $ns_user->EMAIL;
+            if(!empty($ns_user_email)){
+                $err_msg = "중복된 이메일입니다.";
+                $rslt_cd = "1111";
+            }
         }
 
         if($rslt_cd != "1111"){
@@ -168,7 +184,7 @@ class Auth extends MY_Controller {
 
     function regUser(){
         $rslt_cd = "0000"; //0000: 정상, 1111: 오류
-        $err_msg = "정상 처리되었습니다."; //오류 메시지      
+        $err_msg = ""; //오류 메시지      
 
         //트랜잭션 시작
         $this->db->trans_start();
@@ -232,30 +248,30 @@ class Auth extends MY_Controller {
 
 
         if($rslt_cd != "1111"){
+            $email    = base64_encode($email);
             //이메일 중복 체크
             $ns_user = $this->user_model->getEmailDupCnt(array('email'=>$email));
             if(!empty($ns_user)){
                 $ns_user_email = $ns_user->EMAIL;
                 if(!empty($ns_user_email)){
-                    $err_msg = "중복된 이메일입니다.";
+                    $err_msg .= "중복된 이메일입니다.;";
                     $rslt_cd = "1111";
                 }
             }
 
             //닉네임 중복 체크
-            if($rslt_cd != "1111"){
+            //if($rslt_cd != "1111"){
                 $ns_user = $this->user_model->getNickNmDupCnt(array('nk_name'=>$nickname));
                 if(!empty($ns_user)){
                     $ns_user_nknm = $ns_user->NK_NAME;
                     if(!empty($ns_user_nknm)){
-                        $err_msg = "중복된 닉네임입니다.";
+                        $err_msg .= "중복된 닉네임입니다.;";
                         $rslt_cd = "1111";
                     }
                 }
-            }
+            //}
 
             //인증번호 체크
-            $email    = base64_encode($email);
             if($rslt_cd != "1111"){
                 $authNoCnt = $this->user_model->getAuthNoValid(array('email'=>$email, 'cert_no'=>$cert_no));
                 if($authNoCnt->CNT == 0){
@@ -291,6 +307,9 @@ class Auth extends MY_Controller {
         //트랜잭션 종료
         $this->db->trans_complete();
         //한글깨짐 방지 인코딩
+        if($rslt_cd == "0000"){
+            $err_msg = "정상 처리되었습니다.";
+        }
         $err_msg = urlencode($err_msg);
         $rslt_data = array('rslt_cd'=>$rslt_cd, 'rslt_msg'=>$err_msg);
         echo urldecode(json_encode($rslt_data));  

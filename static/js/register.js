@@ -71,11 +71,11 @@ $(function(){
 			alert(s_formatMsg.replace("%1%", "이메일"));
 			$("#email").focus();
 			return;
-		} else if($("#email_valid").val() != "Y"){
+		} /*else if($("#email_valid").val() != "Y"){
 			alert("이메일을 중복확인해주세요");
 			$("#email").focus();
 			return;
-		}
+		}*/
 		_execute(sendAuthNo);
 	});
 });
@@ -89,6 +89,7 @@ function chkAuthNo(){
 		url:"/index.php/auth/chkAuthNo",
 		data: input,
 		success: function(resp){
+			closeLoading();
 			if(resp != ""){
 				rtn1 = JSON.parse(resp);
 				alert(rtn1.rslt_msg);
@@ -111,12 +112,17 @@ function sendAuthNo(){
 		url:"/index.php/auth/sendAuthNo",
 		data: input,
 		success: function(resp){
+			closeLoading();
 			if(resp != ""){
 				rtn1 = JSON.parse(resp);
-				alert(rtn1.rslt_msg);
 				if(rtn1.rslt_cd == "0000"){ //정상
+					alert(rtn1.rslt_msg);
 					$("#eml_desc").fadeIn(); //인증번호 안내 
 					$("#chkCertNo").show(); //인증번호 확인
+				} else { //오류
+					$("#eml_desc").hide();
+					$("#err_desc").html(rtn1.rslt_msg);
+					$("#save_err").show();
 				}
 			}
 		}
@@ -129,16 +135,27 @@ function save(){
 				'password':$("#password").val(), 're_password':$("#re_password").val(),
 				'cert_no':$("#cert_no").val()};
 	var rtn1 = {};
+	var rtnMsg = "";
+	var rtnMsgHtml = "";
 	$.ajax({
 		type:"POST",
 		url:"/index.php/auth/regUser",
 		data: input,
 		success: function(resp){
+			closeLoading();
 			if(resp != ""){
 				rtn1 = JSON.parse(resp);
-				alert(rtn1.rslt_msg);
+				rtnMsg = rtn1.rslt_msg.split(";");
 				if(rtn1.rslt_cd == "0000"){ //정상
+					alert(rtnMsg[0].replace(";", ""));
 					location.href="/";
+				} else {
+					$("#eml_desc").hide();
+					for(var i=0; i<rtnMsg.length; i++){
+						rtnMsgHtml += rtnMsg[i].replace(";", "") + "<br/>";
+					}
+					$("#err_desc").html(rtnMsgHtml);
+					$("#save_err").show();
 				}
 			}
 		}
@@ -158,20 +175,20 @@ function chkValidation(){
 		$("#email").focus();
 		return false;
 	}
-	if($("#email_valid").val() == "N"){
+	/*if($("#email_valid").val() == "N"){
 		alert("이메일을 중복확인해주세요");
 		return false;
-	}
+	}*/
 
 	if($("#nickname").val() == ""){
 		alert(getNullMsg("닉네임"));
 		$("#nickname").focus();
 		return false;
 	} 
-	if($("#nickname_valid").val() == "N"){
+	/*if($("#nickname_valid").val() == "N"){
 		alert("닉네임을 중복확인해주세요");
 		return false;
-	}
+	}*/
 
 	if($("#password").val() == ""){
 		alert(getNullMsg("비밀번호"));
@@ -230,6 +247,7 @@ function chkNicknmDup(){
 		url:"/index.php/auth/getNkNameDup",
 		data: input,
 		success: function(resp){
+			closeLoading();
 			if(resp != ""){
 				rtn1 = JSON.parse(resp);
 				alert(rtn1.rslt_msg);
@@ -252,6 +270,7 @@ function chkEmlDup(){
 		url:"/index.php/auth/getEmlDup",
 		data: input,
 		success: function(resp){
+			closeLoading();
 			if(resp != ""){
 				rtn1 = JSON.parse(resp);
 				alert(rtn1.rslt_msg);
@@ -264,23 +283,4 @@ function chkEmlDup(){
 			}
 		}
 	});
-}
-
-//로딩바 표시
-function showLoading(){
-	 
-}
-
-//로딩바 숨기기
-function closeLoading(){
-	
-}
-
-//로딩바 처리
-function _execute(callbackFn){
-	showLoading();
-	if(typeof(callbackFn) == "function"){
-		callbackFn();
-	}
-	closeLoading();
 }

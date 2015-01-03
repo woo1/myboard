@@ -23,6 +23,7 @@ function uf_login(){
 		url:"/index.php/auth/authentication",
 		data: input,
 		success: function(resp){
+			closeLoading();
 			if(resp != ""){
 				rtn1 = JSON.parse(resp);
 				if(rtn1.rslt_cd == "0000"){ //정상 . 페이지 이동
@@ -65,23 +66,4 @@ function getLenMsg(inputNm, len){
 	if(inputNm == "") return "";
 	if(len == "") return "";
 	return s_lenMsg.replace("%1%", inputNm).replace("%2%", len);
-}
-
-//로딩바 표시
-function showLoading(){
-	 
-}
-
-//로딩바 숨기기
-function closeLoading(){
-	
-}
-
-//로딩바 처리
-function _execute(callbackFn){
-	showLoading();
-	if(typeof(callbackFn) == "function"){
-		callbackFn();
-	}
-	closeLoading();
 }

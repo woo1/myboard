@@ -14,7 +14,8 @@
 			    	}
 			    </style>
 			    <link href="/static/lib/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">			    
-			    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+			    <script src="/static/js/jquery-2.1.3.js"></script>
+			    <script src="/static/js/common.js"></script>
             </head>
             <body>
             	<?php
@@ -26,6 +27,7 @@
             	<?php
             	}
             	?>
+
             	<div class="navbar navbar-fixed-top">
 				  <div class="navbar-inner">
 				    <div class="container">
@@ -71,6 +73,10 @@
 				    </div>
 				  </div>
 				</div>
+				<div id="_loading_bar_" class="progress progress-striped" style="display:none;">
+				  <div class="bar" style="width: 20%;"></div>
+				</div>
+				<div id="body_div">
 				<?php
 				if($this->config->item('is_dev')) {
 				//if(false){

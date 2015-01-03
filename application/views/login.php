@@ -25,6 +25,5 @@
     <div class="modal-footer"> 
       <a href='#' id='btn_login' class='btn btn-primary'>로그인</a>
     </div>
-
   </form>
 </div>
