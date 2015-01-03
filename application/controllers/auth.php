@@ -240,9 +240,9 @@ class Auth extends MY_Controller {
                 $rslt_cd = "1111";
                 $err_msg .= "인증번호는 6자로 입력하세요.";
             }
-            if(strlen($password) > 20){
+            if(strlen($password) > 20 || strlen($password) < 4){
                 $rslt_cd = "1111";
-                $err_msg .= "비밀번호는 20자까지 입력이 가능합니다.";
+                $err_msg .= "비밀번호는 4자부터 20자까지 입력이 가능합니다.";
             }
         }
 

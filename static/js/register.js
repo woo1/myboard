@@ -195,11 +195,11 @@ function chkValidation(){
 		$("#password").focus();
 		return false;
 	}
-	if($("#password").val().length > 20){
-		alert("비밀번호는 20자까지 입력이 가능합니다");
+	if($("#password").val().length < 4 || $("#password").val().length > 20){
+		alert("비밀번호는 4자부터 20자까지 입력이 가능합니다");
 		$("#password").focus();
 		return false;
-	} 
+	}
 	if($("#re_password").val() == ""){
 		alert(getNullMsg("비밀번호 확인"));
 		$("#re_password").focus();
