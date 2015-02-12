@@ -17,3 +17,26 @@ function _execute(callbackFn){
 		callbackFn();
 	}
 }
+
+//로딩바 처리, json 응답값 리턴
+function _execute2(type, url, input, callbackFn){
+	showLoading();
+	var s_type = type;
+	var rtnJson = null;
+	if(s_type == undefined || s_type == null){
+		s_type = "POST";
+	}
+
+	$.ajax({
+		type:type,
+		url:url,
+		data: input,
+		success: function(resp){
+			closeLoading();
+			rtnJSON = $.parseJSON(resp);
+			if(typeof(callbackFn) == "function"){
+				callbackFn(rtnJSON);
+			}
+		}
+	});
+}

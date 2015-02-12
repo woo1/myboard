@@ -13,6 +13,13 @@ $(function(){
 			_execute(uf_login);
 		}
 	});
+	//엔터 키 이벤트
+	$("#password").bind("keyup", function(e){
+		//엔터 키
+		if(e.keyCode == 13){
+			$("#btn_login").click();
+		}
+	});
 });
 
 function uf_login(){

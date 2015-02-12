@@ -58,7 +58,7 @@
 				        	<?php
 				        	if($this->session->userdata('is_login')){
 				        	?>
-				        		<li><a href="#"><strong><?php echo $this->session->userdata('nk_name')?></strong>님</a></li>
+				        		<li><a href="/index.php/myinfo/myboard"><strong><?php echo $this->session->userdata('nk_name')?></strong>님</a></li>
 				        		<li><a href="/index.php/auth/logout">로그아웃</a></li>
 				        	<?php
 				        	} else {

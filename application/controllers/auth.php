@@ -356,7 +356,7 @@ class Auth extends MY_Controller {
                     //$err_msg = "로그인 성공";
                     $rslt_cd = "0000";
                 } else {
-                    $err_msg = "존재하는 아이디와 비밀번호가 없습니다.";
+                    $err_msg = "일치하는 아이디와 비밀번호가 없습니다.";
                     $rslt_cd = "1111";
                 }
             } else {
